@@ -1,0 +1,45 @@
+/* Custom CSS untuk mengatasi CSS warnings */
+
+/* Fix untuk appearance property */
+.css-11aywtz {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  appearance: none; /* Standard property untuk compatibility */
+}
+
+/* Menghapus empty rulesets dengan memberikan minimal style */
+[stylesheet-group="0"],
+[stylesheet-group="1"],
+[stylesheet-group="2"],
+[stylesheet-group="2.1"],
+[stylesheet-group="2.2"],
+[stylesheet-group="3"] {
+  /* Placeholder untuk mencegah empty ruleset warning */
+  content: "";
+}
+
+/* Optimasi untuk performa */
+* {
+  box-sizing: border-box;
+}
+
+/* Smooth scrolling untuk web */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Accessibility improvements */
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 2px solid #007AFF;
+  outline-offset: 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+}

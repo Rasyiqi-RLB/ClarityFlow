@@ -1,0 +1,179 @@
+{
+  "products": [
+    {
+      "id": "remove_ads_forever",
+      "type": "managed",
+      "title": "Remove Ads Forever",
+      "description": "Remove all advertisements and enjoy a clean, distraction-free ClarityFlow experience.",
+      "price": {
+        "usd": 2.99,
+        "eur": 2.99,
+        "gbp": 2.49,
+        "cad": 3.99,
+        "aud": 4.49,
+        "idr": 45000
+      },
+      "benefits": [
+        "No more advertisements",
+        "Clean, distraction-free interface",
+        "Faster app performance",
+        "One-time purchase, lifetime benefit"
+      ]
+    },
+    {
+      "id": "premium_monthly",
+      "type": "subscription",
+      "title": "ClarityFlow Premium (Monthly)",
+      "description": "Unlock all premium features including advanced analytics, unlimited projects, and priority support.",
+      "price": {
+        "usd": 4.99,
+        "eur": 4.99,
+        "gbp": 4.49,
+        "cad": 6.99,
+        "aud": 7.99,
+        "idr": 75000
+      },
+      "billing_period": "P1M",
+      "free_trial": "P7D",
+      "benefits": [
+        "Advanced productivity analytics",
+        "Unlimited projects and tasks",
+        "Priority customer support",
+        "Advanced Google Drive integration",
+        "Custom workflow templates",
+        "Team collaboration features",
+        "Export data in multiple formats",
+        "Early access to new features"
+      ]
+    },
+    {
+      "id": "premium_yearly",
+      "type": "subscription", 
+      "title": "ClarityFlow Premium (Yearly)",
+      "description": "Get the best value with yearly premium access. Includes all premium features with significant savings.",
+      "price": {
+        "usd": 39.99,
+        "eur": 39.99,
+        "gbp": 34.99,
+        "cad": 54.99,
+        "aud": 64.99,
+        "idr": 599000
+      },
+      "billing_period": "P1Y",
+      "free_trial": "P14D",
+      "savings": "33%",
+      "benefits": [
+        "All premium features included",
+        "33% savings compared to monthly",
+        "Extended 14-day free trial",
+        "Advanced productivity analytics",
+        "Unlimited projects and tasks",
+        "Priority customer support",
+        "Advanced Google Drive integration",
+        "Custom workflow templates",
+        "Team collaboration features",
+        "Export data in multiple formats",
+        "Early access to new features"
+      ]
+    },
+    {
+      "id": "lifetime_access",
+      "type": "managed",
+      "title": "ClarityFlow Lifetime Premium",
+      "description": "One-time purchase for lifetime access to all premium features. Best value for long-term users.",
+      "price": {
+        "usd": 99.99,
+        "eur": 99.99,
+        "gbp": 89.99,
+        "cad": 134.99,
+        "aud": 154.99,
+        "idr": 1499000
+      },
+      "benefits": [
+        "Lifetime access to all premium features",
+        "No recurring subscription fees",
+        "All future premium features included",
+        "Advanced productivity analytics",
+        "Unlimited projects and tasks",
+        "Priority customer support",
+        "Advanced Google Drive integration",
+        "Custom workflow templates",
+        "Team collaboration features",
+        "Export data in multiple formats",
+        "Early access to new features",
+        "Best value for long-term users"
+      ]
+    }
+  ],
+  "entitlements": [
+    {
+      "id": "ads_removed",
+      "name": "Ads Removed",
+      "description": "User has removed advertisements",
+      "products": ["remove_ads_forever", "premium_monthly", "premium_yearly", "lifetime_access"]
+    },
+    {
+      "id": "premium",
+      "name": "Premium Features",
+      "description": "User has access to all premium features",
+      "products": ["premium_monthly", "premium_yearly", "lifetime_access"]
+    },
+    {
+      "id": "lifetime",
+      "name": "Lifetime Access",
+      "description": "User has lifetime access to premium features",
+      "products": ["lifetime_access"]
+    }
+  ],
+  "pricing_strategy": {
+    "freemium_model": {
+      "free_features": [
+        "Basic task management",
+        "Up to 3 projects",
+        "Basic notifications",
+        "Google Drive basic integration",
+        "Basic analytics"
+      ],
+      "premium_features": [
+        "Unlimited projects and tasks",
+        "Advanced analytics and insights",
+        "Custom workflow templates",
+        "Team collaboration",
+        "Priority support",
+        "Advanced Google Drive features",
+        "Data export options",
+        "Early access to features"
+      ]
+    },
+    "trial_strategy": {
+      "monthly": "7 days free trial",
+      "yearly": "14 days free trial",
+      "features_during_trial": "Full access to all premium features"
+    },
+    "pricing_psychology": {
+      "anchor_price": "lifetime_access",
+      "most_popular": "premium_yearly",
+      "entry_level": "remove_ads_forever",
+      "best_value": "premium_yearly"
+    }
+  },
+  "google_play_console_setup": {
+    "steps": [
+      "Go to Google Play Console",
+      "Select your app (ClarityFlow)",
+      "Navigate to Monetize > Products > In-app products",
+      "Create each product with the exact Product IDs above",
+      "Set prices according to the pricing table",
+      "Configure subscription details for recurring products",
+      "Set up free trial periods",
+      "Activate all products",
+      "Test purchases in internal testing track"
+    ],
+    "important_notes": [
+      "Product IDs must match exactly with app code",
+      "Prices can be adjusted after creation",
+      "Subscriptions require additional setup",
+      "Test thoroughly before production release"
+    ]
+  }
+}

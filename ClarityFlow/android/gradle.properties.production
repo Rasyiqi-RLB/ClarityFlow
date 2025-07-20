@@ -1,0 +1,46 @@
+# Production Gradle Properties for ClarityFlow
+# Copy this to gradle.properties when building for production
+
+# Android Build Configuration
+android.useAndroidX=true
+android.enableJetifier=true
+android.enableDexingArtifactTransform.desugaring=false
+
+# Build Performance
+org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+org.gradle.parallel=true
+org.gradle.configureondemand=true
+org.gradle.daemon=true
+org.gradle.caching=true
+
+# React Native
+hermesEnabled=true
+enableProguardInReleaseBuilds=true
+enableSeparateBuildPerCPUArchitecture=false
+
+# App Signing (Replace with your actual values)
+CLARITYFLOW_UPLOAD_STORE_FILE=clarityflow-upload-key.keystore
+CLARITYFLOW_UPLOAD_KEY_ALIAS=clarityflow-upload
+CLARITYFLOW_UPLOAD_STORE_PASSWORD=YOUR_STORE_PASSWORD_HERE
+CLARITYFLOW_UPLOAD_KEY_PASSWORD=YOUR_KEY_PASSWORD_HERE
+
+# App Configuration
+CLARITYFLOW_VERSION_NAME=1.0.0
+CLARITYFLOW_VERSION_CODE=1
+
+# Build Type
+CLARITYFLOW_BUILD_TYPE=release
+CLARITYFLOW_ENVIRONMENT=production
+
+# RevenueCat Configuration
+REVENUECAT_ANDROID_API_KEY=goog_HwHtKMOesMjNeJNJnHaMIXcyhnB
+REVENUECAT_IOS_API_KEY=appl_YOUR_IOS_API_KEY_WHEN_READY
+
+# Firebase Configuration (Production)
+GOOGLE_SERVICES_JSON_FILE=google-services.json
+
+# Security
+android.injected.signing.store.file=clarityflow-upload-key.keystore
+android.injected.signing.store.password=YOUR_STORE_PASSWORD_HERE
+android.injected.signing.key.alias=clarityflow-upload
+android.injected.signing.key.password=YOUR_KEY_PASSWORD_HERE

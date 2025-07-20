@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "56252020077",
+    "project_id": "ai-eisenhower-matrix",
+    "storage_bucket": "ai-eisenhower-matrix.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56252020077:android:373762d8cd813ab1779664",
+        "android_client_info": {
+          "package_name": "com.clarityflow.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56252020077-v5jknflvp7msmpi9kg0bvc478epf8lhe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRQ-yNOpnkKQv-3xWIJF6zdNnRh6CiapY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "56252020077-v5jknflvp7msmpi9kg0bvc478epf8lhe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ClarityFlow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./custom.css">
+    <script src="./env.js"></script>
+    <script src="https://apis.google.com/js/api.js" async defer></script>
+    <script>
+      // Wait for Google API to load
+      function waitForGoogleAPI() {
+        console.log('Waiting for Google API to load...');
+
+        if (typeof window.gapi !== 'undefined') {
+          console.log('Google API found, loading auth2 and client...');
+          window.googleAPIReady = true;
+
+          window.gapi.load('auth2:client', function() {
+            console.log('Google Auth2 and Client loaded successfully');
+            window.googleAPIFullyReady = true;
+          });
+        } else {
+          console.log('Google API not yet available, retrying...');
+          setTimeout(waitForGoogleAPI, 100);
+        }
+      }
+
+      // Start checking when page loads
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(waitForGoogleAPI, 500); // Give some time for script to load
+        });
+      } else {
+        setTimeout(waitForGoogleAPI, 500);
+      }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
