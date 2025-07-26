@@ -206,7 +206,28 @@ class APIMiddleware {
 
 export const apiMiddleware = new APIMiddleware();
 
-// Clean up rate limits every hour
-setInterval(() => {
-  apiMiddleware.cleanupRateLimits();
-}, 60 * 60 * 1000);
+// Clean up rate limits every hour - with proper cleanup
+let cleanupInterval: NodeJS.Timeout | null = null;
+
+const startCleanupInterval = () => {
+  if (cleanupInterval) {
+    clearInterval(cleanupInterval);
+  }
+
+  cleanupInterval = setInterval(() => {
+    apiMiddleware.cleanupRateLimits();
+  }, 60 * 60 * 1000);
+};
+
+const stopCleanupInterval = () => {
+  if (cleanupInterval) {
+    clearInterval(cleanupInterval);
+    cleanupInterval = null;
+  }
+};
+
+// Start the cleanup interval
+startCleanupInterval();
+
+// Export cleanup function for proper memory management
+export { stopCleanupInterval };

@@ -3,7 +3,7 @@
  * Konstanta untuk styling tab bar yang konsisten dan mudah dimaintain
  */
 
-import type { TabBarStyleType } from '@/types/performance';
+import type { TabBarStyleType } from '../types/performance';
 
 export const TAB_BAR_CONSTANTS = {
   // Dimensi

@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "clarityflow",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.clarityflow.app",
@@ -26,6 +25,14 @@
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.RECEIVE_BOOT_COMPLETED",
         "android.permission.VIBRATE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.USE_EXACT_ALARM",
         "com.android.vending.BILLING"
       ]
     },
@@ -50,6 +57,25 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.123456789012-zyxwvutsrqponmlkjihgfedcba654321"
         }
+      ],
+      [
+        "react-native-iap",
+        {
+          "android": {
+            "missingDimensionStrategy": {
+              "store": "play"
+            }
+          }
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/adaptive-icon.png",
+          "color": "#3B82F6",
+          "defaultChannel": "default",
+          "enableAutoRegistration": false
+        }
       ]
     ],
     "experiments": {
@@ -59,8 +85,7 @@
       "router": {},
       "eas": {
         "projectId": "f97810ef-d0bb-4fc4-a57a-8075ff3175e1"
-      },
-      "EXPO_PUBLIC_GOOGLE_DRIVE_CLIENT_ID": "56252020077-v5jknflvp7msmpi9kg0bvc478epf8lhe.apps.googleusercontent.com"
+      }
     }
   }
 }

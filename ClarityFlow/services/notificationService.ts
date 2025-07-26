@@ -70,7 +70,13 @@ class NotificationService {
   // Initialize notification service
   async initialize(): Promise<void> {
     try {
-      // Configure notification handler
+      // Skip initialization on web to avoid warnings
+      if (Platform.OS === 'web') {
+        console.log('📱 Notification service: Web platform detected, skipping native initialization');
+        return;
+      }
+
+      // Configure notification handler (only for native platforms)
       Notifications.setNotificationHandler({
         handleNotification: async () => ({
           shouldShowAlert: true,

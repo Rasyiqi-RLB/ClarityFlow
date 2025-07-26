@@ -1,7 +1,7 @@
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useNotifications } from '@/contexts/NotificationContext';
 import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { IconSymbol } from '../components/ui/IconSymbol';
+import { useNotifications } from '../contexts/NotificationContext';
 
 // Interface untuk notifikasi yang sebenarnya
 interface RealNotification {

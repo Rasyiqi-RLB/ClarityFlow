@@ -3,11 +3,11 @@ import { Tabs } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { Dimensions, View } from 'react-native';
 
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { ADD_TASK_ICON_CONSTANTS, ADD_TASK_ICON_STYLE, TAB_BAR_STYLE } from '@/constants/TabBarStyles';
-import { useTheme } from '@/contexts/ThemeContext';
-import { usePlatformCheck } from '@/hooks/usePerformance';
-import type { TabBarStyleType } from '@/types/performance';
+import { IconSymbol } from '../../components/ui/IconSymbol';
+import { ADD_TASK_ICON_CONSTANTS, ADD_TASK_ICON_STYLE, TAB_BAR_STYLE } from '../../constants/TabBarStyles';
+import { useTheme } from '../../contexts/ThemeContext';
+import { usePlatformCheck } from '../../hooks/usePerformance';
+import type { TabBarStyleType } from '../../types/performance';
 
 export default function TabLayout() {
   const { colors } = useTheme();

@@ -16,27 +16,26 @@ try {
 }
 
 import {
-  createUserWithEmailAndPassword,
-  getRedirectResult,
-  onAuthStateChanged,
-  signInWithCredential,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signInWithRedirect,
-  signOut,
-  updateProfile,
-  UserCredential
+    createUserWithEmailAndPassword,
+    getRedirectResult,
+    onAuthStateChanged,
+    signInWithCredential,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    signInWithRedirect,
+    signOut,
+    updateProfile,
+    UserCredential
 } from 'firebase/auth';
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    setDoc,
+    updateDoc
 } from 'firebase/firestore';
-import { ENV } from '../config/environment';
 import { auth, db, GoogleAuthProvider } from '../config/firebase';
 import { logger } from '../services/loggingService';
 import { AuthenticationError, AuthResult, AuthUser, UserRole } from '../types/auth';
@@ -69,34 +68,16 @@ export class FirebaseAuthService {
       try {
         console.log('Initializing Firebase Auth...');
 
-        // Configure Google Sign-In for mobile platforms
-        const configureGoogleSignIn = async () => {
-          if (Platform.OS !== 'web' && GoogleSignin) {
-            try {
-              // Check if running in Expo Go
-              const isExpoGo = Constants.appOwnership === 'expo';
+        // Note: Using Firebase Authentication for Google Sign-In
+        // No need to configure Google Sign-In SDK separately
 
-              if (!isExpoGo) {
-                await GoogleSignin.configure({
-                  webClientId: ENV.auth.googleSignIn.webClientId,
-                  offlineAccess: true,
-                  hostedDomain: '',
-                  forceCodeForRefreshToken: true,
-                });
-                console.log('Google Sign-In configured successfully');
-              } else {
-                console.log('Running in Expo Go - Google Sign-In configuration skipped');
-              }
-            } catch (configError) {
-              console.error('Error configuring Google Sign-In:', configError);
-            }
-          } else if (Platform.OS !== 'web') {
-            console.log('Google Sign-In module not available - skipping configuration');
-          }
-        };
-
-        // Handle redirect result for web platform
+        // Handle redirect result for web platform only
         const handleRedirectResult = async () => {
+          // Only handle redirect result on web platform
+          if (Platform.OS !== 'web') {
+            return;
+          }
+
           try {
             const result = await getRedirectResult(auth);
             if (result) {
@@ -113,7 +94,6 @@ export class FirebaseAuthService {
         // Initialize everything
         const initializeAuth = async () => {
           try {
-            await configureGoogleSignIn();
             await handleRedirectResult();
 
             this.authStateListener = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -243,15 +223,27 @@ export class FirebaseAuthService {
         });
         
         try {
+          console.log('🔍 Attempting Google Sign-In with Firebase Auth...');
+          console.log('🔍 Current domain:', window.location.hostname);
+          console.log('🔍 Current origin:', window.location.origin);
+
           userCredential = await signInWithPopup(auth, provider);
+          console.log('✅ Google Sign-In successful');
         } catch (popupError: any) {
-          console.error('Google Sign-In popup error:', popupError);
+          console.error('❌ Google Sign-In popup error:', popupError);
+          console.error('❌ Error code:', popupError.code);
+          console.error('❌ Error message:', popupError.message);
           
           // Handle specific popup and CORS errors
           if (popupError.code === 'auth/popup-blocked') {
             throw new Error('Popup diblokir browser. Silakan aktifkan popup untuk domain ini.');
           } else if (popupError.code === 'auth/popup-closed-by-user') {
             throw new Error('Login dibatalkan. Silakan coba lagi.');
+          } else if (popupError.code === 'auth/unauthorized-domain' ||
+                     popupError.message?.includes('DEVELOPER_ERROR') ||
+                     popupError.message?.includes('not authorized')) {
+            const currentDomain = typeof window !== 'undefined' ? window.location.hostname : 'unknown';
+            throw new Error(`Domain '${currentDomain}' tidak diotorisasi untuk Google Sign-In. Silakan tambahkan domain ini ke Firebase Console > Authentication > Settings > Authorized domains.`);
           } else if (popupError.message?.includes('Cross-Origin-Opener-Policy') ||
                      popupError.message?.includes('window.closed')) {
             // Try redirect method as fallback for CORS issues

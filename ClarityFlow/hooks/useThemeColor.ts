@@ -4,13 +4,13 @@
  * https://docs.expo.dev/guides/color-schemes/
  */
 
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '../constants/Colors';
+import { useColorScheme } from './useColorScheme';
 
 // Try to import ThemeContext, but handle gracefully if not available
 let useTheme: any = null;
 try {
-  const themeModule = require('@/contexts/ThemeContext');
+  const themeModule = require('../contexts/ThemeContext');
   useTheme = themeModule.useTheme;
 } catch (error) {
   // ThemeContext not available, will fall back to legacy behavior

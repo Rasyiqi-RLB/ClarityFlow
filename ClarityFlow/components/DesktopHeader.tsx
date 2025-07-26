@@ -1,9 +1,9 @@
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Dimensions, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import NotificationBadge from './NotificationBadge';
+import { IconSymbol } from './ui/IconSymbol';
 
 interface AppHeaderProps {
   title?: string;

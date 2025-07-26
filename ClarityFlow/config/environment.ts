@@ -53,7 +53,9 @@ const baseConfig = {
   // Auth configuration
   auth: {
     googleSignIn: {
-      webClientId: Constants.expoConfig?.extra?.googleWebClientId || 'your-web-client-id.googleusercontent.com',
+      webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ||
+                  Constants.expoConfig?.extra?.googleWebClientId ||
+                  '56252020077-v5jknflvp7msmpi9kg0bvc478epf8lhe.apps.googleusercontent.com',
       offlineAccess: true,
       forceCodeForRefreshToken: true,
     },

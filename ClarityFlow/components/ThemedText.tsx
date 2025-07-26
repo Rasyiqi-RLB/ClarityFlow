@@ -1,11 +1,11 @@
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useThemeColor } from '../hooks/useThemeColor';
 
 // Try to import ThemeContext for enhanced theming
 let useTheme: any = null;
 try {
-  const themeModule = require('@/contexts/ThemeContext');
+  const themeModule = require('../contexts/ThemeContext');
   useTheme = themeModule.useTheme;
 } catch (error) {
   // ThemeContext not available, will fall back to legacy behavior

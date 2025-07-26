@@ -1,14 +1,34 @@
-import RNIap, {
-  Product,
-  Subscription,
-  ProductPurchase,
-  SubscriptionPurchase,
-  PurchaseError,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-} from 'react-native-iap';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+
+// Conditional import for react-native-iap to avoid errors in Expo Go
+let RNIap: any = null;
+let Product: any = null;
+let Subscription: any = null;
+let ProductPurchase: any = null;
+let SubscriptionPurchase: any = null;
+let PurchaseError: any = null;
+let purchaseErrorListener: any = null;
+let purchaseUpdatedListener: any = null;
+
+try {
+  const isExpoGo = Constants.appOwnership === 'expo';
+
+  if (!isExpoGo) {
+    const iapModule = require('react-native-iap');
+    RNIap = iapModule.default;
+    Product = iapModule.Product;
+    Subscription = iapModule.Subscription;
+    ProductPurchase = iapModule.ProductPurchase;
+    SubscriptionPurchase = iapModule.SubscriptionPurchase;
+    PurchaseError = iapModule.PurchaseError;
+    purchaseErrorListener = iapModule.purchaseErrorListener;
+    purchaseUpdatedListener = iapModule.purchaseUpdatedListener;
+  }
+} catch (error: any) {
+  console.log('react-native-iap not available:', error.message);
+}
 
 // Product IDs - must match Google Play Console
 export const PRODUCT_IDS = {
@@ -46,6 +66,8 @@ class NativeBillingService {
     premium: false,
     lifetime: false,
   };
+  private purchaseUpdateListener: any = null;
+  private purchaseErrorListener: any = null;
 
   // Storage keys
   private readonly STORAGE_KEYS = {
@@ -61,6 +83,13 @@ class NativeBillingService {
 
     try {
       console.log('💳 Initializing Native Billing Service...');
+
+      // Check if RNIap is available (not in Expo Go)
+      if (!RNIap) {
+        console.log('💳 react-native-iap not available - running in Expo Go or module not found');
+        this.initialized = true;
+        return;
+      }
 
       // Initialize connection to billing service
       await RNIap.initConnection();
@@ -88,6 +117,11 @@ class NativeBillingService {
    * Load available products from store
    */
   private async loadProducts(): Promise<void> {
+    if (!RNIap) {
+      this.products = [];
+      return;
+    }
+
     try {
       const productIds = Object.values(PRODUCT_IDS);
       this.products = await RNIap.getProducts(productIds);
@@ -102,6 +136,11 @@ class NativeBillingService {
    * Load available subscriptions from store
    */
   private async loadSubscriptions(): Promise<void> {
+    if (!RNIap) {
+      this.subscriptions = [];
+      return;
+    }
+
     try {
       const subscriptionIds = Object.values(SUBSCRIPTION_IDS);
       this.subscriptions = await RNIap.getSubscriptions(subscriptionIds);
@@ -116,17 +155,38 @@ class NativeBillingService {
    * Setup purchase event listeners
    */
   private setupPurchaseListeners(): void {
+    if (!purchaseUpdatedListener || !purchaseErrorListener) {
+      return;
+    }
+
+    // Clean up existing listeners first
+    this.cleanupListeners();
+
     // Listen for successful purchases
-    purchaseUpdatedListener((purchase: ProductPurchase | SubscriptionPurchase) => {
+    this.purchaseUpdateListener = purchaseUpdatedListener((purchase: ProductPurchase | SubscriptionPurchase) => {
       console.log('✅ Purchase successful:', purchase.productId);
       this.handlePurchaseSuccess(purchase);
     });
 
     // Listen for purchase errors
-    purchaseErrorListener((error: PurchaseError) => {
+    this.purchaseErrorListener = purchaseErrorListener((error: PurchaseError) => {
       console.error('❌ Purchase error:', error);
       this.handlePurchaseError(error);
     });
+  }
+
+  /**
+   * Clean up purchase listeners
+   */
+  private cleanupListeners(): void {
+    if (this.purchaseUpdateListener) {
+      this.purchaseUpdateListener.remove();
+      this.purchaseUpdateListener = null;
+    }
+    if (this.purchaseErrorListener) {
+      this.purchaseErrorListener.remove();
+      this.purchaseErrorListener = null;
+    }
   }
 
   /**
@@ -306,7 +366,12 @@ class NativeBillingService {
    */
   async cleanup(): Promise<void> {
     try {
-      await RNIap.endConnection();
+      // Clean up listeners first
+      this.cleanupListeners();
+
+      if (RNIap) {
+        await RNIap.endConnection();
+      }
       this.initialized = false;
       console.log('💳 Billing service disconnected');
     } catch (error) {

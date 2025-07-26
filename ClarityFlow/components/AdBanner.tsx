@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
-import { AdMobBanner } from 'expo-ads-admob';
-import AdService from '../services/adService';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
+import AdService from '../services/adService';
 
 interface AdBannerProps {
   size?: 'banner' | 'largeBanner' | 'mediumRectangle' | 'fullBanner' | 'leaderboard' | 'smartBannerPortrait' | 'smartBannerLandscape';
@@ -55,14 +54,12 @@ const AdBanner: React.FC<AdBannerProps> = ({
       { backgroundColor: colors.background.primary },
       style
     ]}>
-      <AdMobBanner
-        bannerSize={size}
-        adUnitID={adConfig.bannerId}
-        servePersonalizedAds={false}
-        onDidFailToReceiveAdWithError={handleAdFailedToLoad}
-        onAdViewDidReceiveAd={handleAdLoaded}
-        style={styles.banner}
-      />
+      {/* AdMob Banner temporarily disabled for build */}
+      <View style={styles.banner}>
+        <Text style={{ color: colors.text.secondary, fontSize: 12, textAlign: 'center' }}>
+          Ad Space (Temporarily Disabled)
+        </Text>
+      </View>
     </View>
   );
 };

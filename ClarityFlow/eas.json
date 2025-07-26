@@ -4,23 +4,39 @@
     "appVersionSource": "remote"
   },
   "build": {
-
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      },
+      "env": {
+        "NODE_ENV": "production",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "56252020077-v5jknflvp7msmpi9kg0bvc478epf8lhe.apps.googleusercontent.com"
       }
     },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleDebug"
+        "buildType": "apk"
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      },
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   },
   "submit": {

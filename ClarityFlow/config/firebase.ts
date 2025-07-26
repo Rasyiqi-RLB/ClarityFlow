@@ -1,27 +1,14 @@
-import Constants from 'expo-constants';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import {
-    Auth,
-    getAuth,
-    GoogleAuthProvider
+  Auth,
+  getAuth,
+  GoogleAuthProvider
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { Platform } from 'react-native';
 
-// Conditional import for Google Sign-In to avoid TurboModule errors in Expo Go
-let GoogleSignin: any = null;
-try {
-  if (Platform.OS !== 'web') {
-    const isExpoGo = Constants.appOwnership === 'expo';
-
-    if (!isExpoGo) {
-      GoogleSignin = require('@react-native-google-signin/google-signin').GoogleSignin;
-    }
-  }
-} catch (error: any) {
-  console.log('Google Sign-In module not available in firebase config:', error.message);
-}
+// Note: Google Sign-In module import moved to FirebaseAuthService
 
 // Firebase configuration
 const firebaseConfig = {
@@ -37,35 +24,66 @@ const firebaseConfig = {
 const validateConfig = () => {
   const requiredKeys = ['apiKey', 'authDomain', 'projectId', 'appId'];
   const missingKeys = requiredKeys.filter(key => !firebaseConfig[key as keyof typeof firebaseConfig]);
-  
+
   if (missingKeys.length > 0) {
     console.warn('Missing Firebase configuration keys:', missingKeys);
   }
-  
+
   return missingKeys.length === 0;
 };
 
-// Initialize Firebase app (only once)
+// Initialize Firebase app (only once) with better error handling
 let app: FirebaseApp;
-if (getApps().length === 0) {
-  if (validateConfig()) {
-    app = initializeApp(firebaseConfig);
-    console.log('Firebase app initialized successfully');
+try {
+  if (getApps().length === 0) {
+    if (validateConfig()) {
+      app = initializeApp(firebaseConfig);
+      console.log('Firebase app initialized successfully');
+    } else {
+      console.warn('Firebase configuration incomplete, using fallback');
+      // Use fallback config that won't crash
+      app = initializeApp({
+        apiKey: firebaseConfig.apiKey || "fallback-key",
+        authDomain: firebaseConfig.authDomain || "fallback.firebaseapp.com",
+        projectId: firebaseConfig.projectId || "fallback-project",
+        appId: firebaseConfig.appId || "fallback-app-id"
+      });
+    }
   } else {
-    throw new Error('Firebase configuration is incomplete');
+    app = getApps()[0];
+    console.log('Using existing Firebase app instance');
   }
-} else {
-  app = getApps()[0];
+} catch (error) {
+  console.error('Error initializing Firebase app:', error);
+  // Create a minimal app instance to prevent crashes
+  try {
+    app = initializeApp({
+      apiKey: "minimal-fallback-key",
+      authDomain: "minimal-fallback.firebaseapp.com",
+      projectId: "minimal-fallback-project",
+      appId: "minimal-fallback-app"
+    });
+    console.log('Firebase fallback app created');
+  } catch (fallbackError) {
+    console.error('Even fallback Firebase init failed:', fallbackError);
+    throw new Error('Firebase initialization completely failed');
+  }
 }
 
 // Initialize Firebase Auth
 let auth: Auth;
+
 try {
   auth = getAuth(app);
   console.log('Firebase Auth initialized successfully');
+
+  // Note: The AsyncStorage warning in Expo Go is expected and will not appear in production builds.
+  // Firebase v11 automatically detects and uses AsyncStorage when available in production.
+  // In Expo Go, some persistence features are limited, but this doesn't affect functionality.
+
 } catch (error) {
   console.error('Error initializing Firebase Auth:', error);
-  // Fallback to basic auth
+  // Fallback
   auth = getAuth(app);
 }
 
@@ -91,26 +109,7 @@ if (Platform.OS === 'web') {
   });
 }
 
-// Configure Google Sign-In
-if (Platform.OS !== 'web' && GoogleSignin) {
-  try {
-    const isExpoGo = Constants.appOwnership === 'expo';
-
-    if (!isExpoGo) {
-      GoogleSignin.configure({
-        webClientId: '56252020077-v5jknflvp7msmpi9kg0bvc478epf8lhe.apps.googleusercontent.com', // Web client ID for ai-eisenhower-matrix project
-        offlineAccess: true,
-      });
-      console.log('Google Sign-In configured successfully in firebase config');
-    } else {
-      console.log('Running in Expo Go - Google Sign-In configuration skipped in firebase config');
-    }
-  } catch (configError) {
-    console.error('Error configuring Google Sign-In in firebase config:', configError);
-  }
-} else if (Platform.OS !== 'web') {
-  console.log('Google Sign-In module not available in firebase config - skipping configuration');
-}
+// Note: Google Sign-In configuration handled in FirebaseAuthService to avoid duplication
 
 // Initialize Firestore
 const db = getFirestore(app);

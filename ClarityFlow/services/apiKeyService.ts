@@ -25,6 +25,15 @@ class APIKeyService {
    */
   async loadAPIConfigs(): Promise<APIKeyConfig[]> {
     try {
+      // Import auth dynamically to avoid circular dependencies
+      const { auth } = await import('../config/firebase');
+
+      // Check if user is authenticated
+      if (!auth.currentUser) {
+        console.log('User not authenticated, returning default API configs');
+        return this.getDefaultConfigs();
+      }
+
       const settingsRef = doc(db, this.SETTINGS_DOC_PATH);
       const settingsSnap = await getDoc(settingsRef);
       
@@ -58,28 +67,36 @@ class APIKeyService {
           return configs;
         }
       }
-      
+
       // Return default empty configurations
-      return [
-        {
-          name: 'Gemini',
-          description: 'Google Gemini AI untuk analisis tugas dan produktivitas',
-          apiKey: '',
-          enabled: false,
-          provider: 'gemini'
-        },
-        {
-          name: 'OpenRouter',
-          description: 'OpenRouter API untuk akses ke berbagai model AI',
-          apiKey: '',
-          enabled: false,
-          provider: 'openrouter'
-        }
-      ];
+      return this.getDefaultConfigs();
     } catch (error) {
       console.error('Error loading API keys from Firestore:', error);
-      throw new Error('Failed to load API configurations');
+      // Return default configs instead of throwing error
+      return this.getDefaultConfigs();
     }
+  }
+
+  /**
+   * Get default API configurations
+   */
+  private getDefaultConfigs(): APIKeyConfig[] {
+    return [
+      {
+        name: 'Gemini',
+        description: 'Google Gemini AI untuk analisis tugas dan produktivitas',
+        apiKey: '',
+        enabled: false,
+        provider: 'gemini'
+      },
+      {
+        name: 'OpenRouter',
+        description: 'OpenRouter API untuk akses ke berbagai model AI',
+        apiKey: '',
+        enabled: false,
+        provider: 'openrouter'
+      }
+    ];
   }
 
   /**
@@ -87,6 +104,14 @@ class APIKeyService {
    */
   async saveAPIConfigs(configs: APIKeyConfig[]): Promise<void> {
     try {
+      // Import auth dynamically to avoid circular dependencies
+      const { auth } = await import('../config/firebase');
+
+      // Check if user is authenticated
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to save API configurations');
+      }
+
       const settingsRef = doc(db, this.SETTINGS_DOC_PATH);
       
       // Convert configs to Firestore format

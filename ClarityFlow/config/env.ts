@@ -12,7 +12,7 @@ export const ENV_CONFIG = {
   // Feature Flags
   ENABLE_AI_FEATURES: true,
   ENABLE_CALENDAR_INTEGRATION: false,
-  ENABLE_GOOGLE_DRIVE_BACKUP: true,
+  ENABLE_GOOGLE_DRIVE_BACKUP: false, // Disabled - feature removed
   ENABLE_NOTIFICATIONS: true,
   ENABLE_API_MANAGEMENT: true,
   

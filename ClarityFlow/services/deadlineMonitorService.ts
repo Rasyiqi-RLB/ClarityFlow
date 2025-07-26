@@ -126,6 +126,14 @@ class DeadlineMonitorService {
     }
   }
 
+  // Cleanup method to prevent memory leaks
+  cleanup(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+
   // Check for upcoming deadlines and schedule notifications
   async checkUpcomingDeadlines(): Promise<void> {
     try {

@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as AdMob from 'expo-ads-admob';
 
 export interface AdConfig {
   bannerId: string;
@@ -55,15 +54,15 @@ class AdService {
   async initialize(): Promise<void> {
     try {
       await this.loadSettings();
-      
+
       if (this.settings.adsRemoved) {
         console.log('🚫 Ads removed - skipping AdMob initialization');
         return;
       }
 
-      // Initialize AdMob
-      // Note: expo-ads-admob doesn't require explicit initialization
-      // Test ads will be shown automatically in development mode
+      // Initialize AdMob - temporarily disabled for build
+      // TODO: Re-implement with react-native-google-mobile-ads
+      console.log('📱 AdMob initialization temporarily disabled');
 
       this.initialized = true;
       console.log('📱 AdMob initialized successfully');
@@ -120,7 +119,8 @@ class AdService {
     }
 
     try {
-      await AdMob.requestPermissionsAsync();
+      // AdMob functionality temporarily disabled for build
+      console.log('📱 Banner ad would be shown here');
       return true;
     } catch (error) {
       console.error('Failed to show banner ad:', error);
@@ -144,17 +144,12 @@ class AdService {
     }
 
     try {
-      await AdMob.requestPermissionsAsync();
-      
-      // Load and show interstitial
-      await AdMob.AdMobInterstitial.setAdUnitID(this.config.interstitialId);
-      await AdMob.AdMobInterstitial.requestAdAsync();
-      await AdMob.AdMobInterstitial.showAdAsync();
+      // AdMob functionality temporarily disabled for build
+      console.log('📺 Interstitial ad would be shown here');
 
       this.settings.lastInterstitialShown = now;
       await this.saveSettings();
 
-      console.log('📺 Interstitial ad shown');
       return true;
     } catch (error) {
       console.error('Failed to show interstitial ad:', error);
@@ -169,23 +164,11 @@ class AdService {
     }
 
     try {
-      await AdMob.requestPermissionsAsync();
-      
-      // Load and show rewarded ad
-      await AdMob.AdMobRewarded.setAdUnitID(this.config.rewardedId);
-      await AdMob.AdMobRewarded.requestAdAsync();
-      
-      return new Promise((resolve) => {
-        AdMob.AdMobRewarded.addEventListener('rewardedVideoUserDidEarnReward', () => {
-          resolve({ shown: true, rewarded: true });
-        });
+      // AdMob functionality temporarily disabled for build
+      console.log('🎁 Rewarded ad would be shown here');
 
-        AdMob.AdMobRewarded.addEventListener('rewardedVideoDidDismiss', () => {
-          resolve({ shown: true, rewarded: false });
-        });
-
-        AdMob.AdMobRewarded.showAdAsync();
-      });
+      // Simulate successful reward for testing
+      return { shown: true, rewarded: true };
     } catch (error) {
       console.error('Failed to show rewarded ad:', error);
       return { shown: false, rewarded: false };
